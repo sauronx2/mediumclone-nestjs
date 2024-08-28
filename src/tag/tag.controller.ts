@@ -8,7 +8,7 @@ export class TagController {
   async findAll(): Promise<{ tags: string[] }> {
     const tags = await this.tagService.findAll();
     return {
-      tags: tags.map((tag) => tag.name),
+      tags: tags.map(tag => tag.name),
     };
   }
 }
