@@ -8,6 +8,7 @@ import { sign } from 'jsonwebtoken';
 import { JWT_SECRET } from 'config';
 import { UserResponseInterface } from './types/userResponse.interface';
 import { compare } from 'bcrypt';
+import { UpdateUserDto } from './dto/updateUser.dto';
 
 @Injectable()
 export class UserService {
@@ -54,7 +55,17 @@ export class UserService {
     return user;
   }
 
-  async findById(id: number): Promise<UserEntity> {
+  async updateUser(userId: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {
+    const user = await this.findById(userId);
+
+    if (!user) throw new HttpException('User does not exist', HttpStatus.UNPROCESSABLE_ENTITY);
+
+    Object.assign(user, updateUserDto);
+
+    return await this.userRepository.save(user);
+  }
+
+  findById(id: number): Promise<UserEntity> {
     return this.userRepository.findOne({ where: { id } });
   }
 
